@@ -143,12 +143,12 @@ def cal_projections(X_data,B_data,alpha1,beta1,gamma1,k_d):
 
 
 if __name__ == '__main__':
-    X_filepath = 'D:\\MachineLearning\\Python\\pyCharmProjects\\ML\\csbio\\data\\X_original_GAI.csv'
+    X_filepath = 'D:\\MachineLearning\\data\\X_original_GAI.csv'
     X_original = pd.read_csv(X_filepath)#(20502, 643)
     X_original = X_original.values#(20502, 643)
     sc = MinMaxScaler()
     X_original = sc.fit_transform(X_original)
-    Y_filepath = 'D:\\MachineLearning\\Python\\pyCharmProjects\\ML\\csbio\\data\\gnd4class_4_GAI.csv'
+    Y_filepath = 'D:\\MachineLearning\\data\\gnd4class_4_GAI.csv'
     Y_gnd4class4 = pd.read_csv(Y_filepath)#(643, 4)
     Y_gnd4class4 = Y_gnd4class4.values.transpose()#(4, 643)
     X = np.mat(X_original)#(20502, 643)
