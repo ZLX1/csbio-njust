@@ -146,3 +146,91 @@ def cal_projections(X_data,B_data,k_d):
     # print('Y.shape = ',Y.shape)
     # print('Q.shape = ', Q.shape)
     return Y,Q
+
+if __name__ == '__main__':
+    X_filepath = 'D:\\\data\\X_original_GAI.csv'
+    X_original = pd.read_csv(X_filepath)#(20502, 643)
+    X_original = X_original.values#(20502, 643)
+    # X_original = X_original.transpose()#(643, 20502)
+    sc = MinMaxScaler()
+    X_original = sc.fit_transform(X_original)
+    # X_original = X_original.transpose()#(20502, 643)
+    Y_filepath = 'D:\\data\\gnd4class_4_GAI.csv'
+    Y_gnd4class4 = pd.read_csv(Y_filepath)#(643, 4)
+    Y_gnd4class4 = Y_gnd4class4.values.transpose()#(4, 643)
+    X = np.mat(X_original)#(20502, 643)
+    B = np.mat(Y_gnd4class4)#(4, 643)
+    correctlist = []
+    accuracylist = []
+    precisionlist = []
+    recalllist = []
+    f1list = []
+    for k in [1,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]:
+        correct = 0
+        accuracy = 0
+        precision = 0
+        recall = 0
+        f1 = 0
+        print('k = ',k)
+        Y, Q = cal_projections(X.T,B.T,k)
+        for per in range(1, 6):
+            x_train, x_test, y_train, y_test = train_test_split(Q, B.T, test_size=143,random_state=per)
+            knc = KNeighborsClassifier(n_neighbors=5)
+            knc.fit(x_train, y_train)
+            y_predict = knc.predict(x_test)
+            correct += knc.score(x_test, y_test)
+            accuracy += accuracy_score(y_test, y_predict)
+            precision += precision_score(y_test, y_predict, average='macro')
+            recall += recall_score(y_test, y_predict, average='macro')
+            f1 += f1_score(y_test, y_predict, average='macro')
+        print('每次准确率：', correct / 5 )
+        print('每次accuracy：', accuracy / 5)
+        print('每次precision：', precision / 5)
+        print('每次recall：', recall / 5)
+        print('每次f1：', f1 / 5)
+        correctlist.append(correct / 5)
+        accuracylist.append(accuracy / 5)
+        precisionlist.append(precision / 5)
+        recalllist.append(recall / 5)
+        f1list.append(f1 / 5)
+        print('---------------------------------------')
+
+    # 求均值
+    accuracy_mean = np.mean(accuracylist)
+    # 求方差
+    accuracy_var = np.var(accuracylist)
+    # 求标准差
+    accuracy_std = np.std(accuracylist)
+    print('accuracy_mean = ', accuracy_mean)
+    print('accuracy_var = ', accuracy_var)
+    print('accuracy_std = ', accuracy_std)
+
+    # 求均值
+    precision_mean = np.mean(precisionlist)
+    # 求方差
+    precision_var = np.var(precisionlist)
+    # 求标准差
+    precision_std = np.std(precisionlist)
+    print('precision_mean = ', precision_mean)
+    print('precision_var = ', precision_var)
+    print('precision_std = ', precision_std)
+
+    # 求均值
+    recall_mean = np.mean(recalllist)
+    # 求方差
+    recall_var = np.var(recalllist)
+    # 求标准差
+    recall_std = np.std(recalllist)
+    print('recall_mean = ', recall_mean)
+    print('recall_var = ', recall_var)
+    print('recall_std = ', recall_std)
+
+    # 求均值
+    f1_mean = np.mean(f1list)
+    # 求方差
+    f1_var = np.var(f1list)
+    # 求标准差
+    f1_std = np.std(f1list)
+    print('f1_mean = ', f1_mean)
+    print('f1_var = ', f1_var)
+    print('f1_std = ', f1_std)
