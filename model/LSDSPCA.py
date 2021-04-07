@@ -71,9 +71,9 @@ def LSDSPCA_Algorithm(xMat,bMat,laplace,alpha,beta,gamma,k,c,n):
     obj1 = 0
     obj2 = 0
     thresh = 1e-50
-    A = np.random.rand(c, k)  # (4,3)
-    V = np.eye(n)  # (500, 500)
-    vMat = np.mat(V)  # (500, 500)
+    A = np.random.rand(c, k)
+    V = np.eye(n)
+    vMat = np.mat(V)
     for m in range(0, 10):
         Z = -(xMat.T * xMat) - (alpha * bMat.T * bMat) + beta * vMat + gamma * laplace  # (643, 643)
         # cal Q
